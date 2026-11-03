@@ -1,0 +1,124 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Small businesses · Pienyrittäjät · Ganacsiyada yaryar · المشاريع الصغيرة · Küçük işletmeler</title><style>
+:root{--bg:#fafaf7;--fg:#1c1c1a;--mu:#6b6b66;--ac:#1f6f5c;--bd:#d8d8d0;--cd:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#161615;--fg:#ececE6;--mu:#9a9a92;--ac:#4cb89f;--bd:#3a3a36;--cd:#202020;color-scheme:dark}}
+html{height:100%}body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.5 system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:20px 16px 40px}h1{font-size:22px}h2{font-size:19px;margin:8px 0}.mu{color:var(--mu);font-size:14px}
+label,.row{display:flex;gap:10px;align-items:center;padding:10px 12px;margin:6px 0;background:var(--cd);border:1px solid var(--bd);border-radius:10px}
+.row{justify-content:space-between;flex-wrap:wrap}.row span{flex:1 1 220px}
+input[type=radio],input[type=checkbox]{accent-color:var(--ac);width:18px;height:18px;flex:none}
+input.o,select,textarea{font:inherit;background:var(--bg);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:6px;max-width:100%}
+textarea{width:100%;box-sizing:border-box}
+button{font:inherit;padding:10px 18px;border-radius:10px;border:1px solid var(--ac);background:var(--ac);color:#fff;cursor:pointer;margin:6px 6px 0 0}
+button.g{background:none;color:var(--ac)}button:disabled{opacity:.4}
+.lg{text-align:center;margin-bottom:24px}.lg button{margin:6px 4px}
+.bar{height:4px;background:var(--bd);border-radius:2px;margin:8px 0}.bar i{display:block;height:100%;background:var(--ac);border-radius:2px}
+.nt{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:2px 14px 6px;margin:14px 0 8px;font-size:15px}.nt h2{font-size:16px}
+</style></head><body><main id="app"></main><script>
+const CONTACT='Maria Cedersten, maria.cedersten@aalto.fi',KEEP='31.12.2026';
+// Native-language review is needed for all translations before launch.
+// Q types: s=single, m=multiple (max=limit, x=index of "Other"), g=matrix (s=scale key), x=free text, c=1 → shopping-centre list
+const CE=['Puhos, Helsinki','Kontula, Helsinki'];
+const L={en:'English',ru:'Русский',so:'Soomaali',ar:'العربية',tr:'Türkçe'};
+const Q=[{t:'s',c:1},{t:'m',max:3,x:5},{t:'g',s:'s3'},{t:'m',x:6},{t:'s'},{t:'g',s:'s1'},{t:'s'},{t:'s'},{t:'g',s:'s2'},{t:'s'},{t:'m',max:3,x:5},{t:'x'}];
+const T={};
+T.en={ui:{title:'Survey of small business owners and commercial tenants on the future of local shopping centres',intro:'This survey is anonymous and voluntary. There are no right or wrong answers: we are interested in your own experience. You can skip any question and stop at any time. “Changes” means possible renovation, redevelopment or demolition of the building and its surroundings. It does not mean that any of them will be carried out.',start:'Start',next:'Next',back:'Back',finish:'Finish',other:'Please specify',max:'Select up to {n}',thanks:'Thank you for taking part! Your answers will help us better understand the needs of local businesses.',copy:'Copy answers',opt:'optional question',nt:'Data notice',n:'This survey is part of a university course project. We do not ask for your name or contact details, so your answers are anonymous. Taking part is voluntary. Answers are sent only when you complete the survey; after that they cannot be traced back to you or deleted individually. They are used only for this course project and kept until {keep}. Contact person: {contact}. Please do not write names or contact details in open answers. The survey is for people aged 18 or over.',agree:'I have read the notice and agree'},
+s1:['1 — strongly disagree','2 — somewhat disagree','3 — neither agree nor disagree','4 — somewhat agree','5 — strongly agree','Don’t know'],
+s2:['1 — not worried at all','2 — not very worried','3 — somewhat worried','4 — very worried','5 — extremely worried','I don’t expect this outcome','Don’t know'],
+s3:['Increased a lot','Increased somewhat','No change','Decreased somewhat','Decreased a lot','Don’t know'],
+q:[{q:'Which shopping centre is your business in?'},
+{q:'Why did you choose this place for your business?',o:['Affordable rent','Steady flow of customers','Close to the metro or other transport','Community of other entrepreneurs','Customers from my own cultural community','Other']},
+{q:'How have the following changed in recent years?',r:['Rent','Utility costs','Number of customers']},
+{q:'What difficulties have you faced in starting or running your business?',h:'You can select several options.',o:['Language','Permits and paperwork','Access to loans','Discrimination','Effects of COVID-19','None of these','Other']},
+{q:'What kind of lease do you have?',o:['Fixed-term','Open-ended','Sublease from another tenant','Don’t know']},
+{q:'How much do you agree?',r:['I cooperate with other entrepreneurs here.','My business would suffer if nearby shops and cafés closed.','Other functions of the centre (metro, prayer rooms, meeting places) bring me customers.']},
+{q:'How well do you know the plans for renovating or demolishing this shopping centre?',o:['I know them well','I have heard a little','I have not heard of them','Not sure']},
+{q:'Has anyone from the city, the building owner or a planning project contacted you about your business’s future?',o:['Yes, in a language I understand','Yes, but not in a language I understand','No','Don’t know']},
+{q:'How worried are you about the following?',r:['Rising rent','Having to move','Not finding comparable premises elsewhere','Losing customers or staff','Not being able to afford the renewed building']},
+{q:'How likely is it that you will still run your business in this area after renewal?',o:['Very likely','Likely','Unlikely','Very unlikely','Don’t know']},
+{q:'Which measures would help keep independent businesses here?',h:'You can select several options.',o:['Compensation','Temporary premises during works','Guaranteed rent level','Right to return after renovation','Phased rebuilding instead of full demolition','Other']},
+{q:'What would you like to say to city planners and politicians, or what should be preserved here?',h:'Please do not include names or contact details.'}]};
+T.so={ui:{title:'Sahan loogu talagalay milkiilayaasha ganacsiyada yaryar iyo kireystayaasha goobaha ganacsiga ee ku saabsan mustaqbalka xarumaha ganacsiga ee deegaanka',intro:'Sahankani waa mid qarsoodi ah oo ikhtiyaari ah. Jawaabo sax ah ama khalad ah ma jiraan: waxaan xiisaynaynaa khibradaada gaarka ah. Su’aal kasta waad ka boodi kartaa, waadna joojin kartaa wakhti kasta. “Isbeddelada” waxay ula jeedaan dayactir, dib-u-horumarin ama dumis suurtagal ah oo dhismaha iyo agagaarkiisa ku dhaca. Macnaheedu maaha in midkoodna la fulin doono.',start:'Bilow',next:'Xiga',back:'Dib',finish:'Dhammee',other:'Fadlan caddee',max:'Dooro ugu badnaan {n}',thanks:'Waad ku mahadsan tahay ka qaybgalka! Jawaabahaaga waxay naga caawin doonaan inaan si fiican u fahanno baahiyaha ganacsiyada deegaanka.',copy:'Koobi jawaabaha',opt:'su’aal ikhtiyaari ah',nt:'Ogeysiis xog',n:'Sahankan waa qayb ka mid ah mashruuc koorso jaamacadeed. Magacaaga iyo xogta xiriirkaaga ma weydiino, sidaas darteed jawaabahaagu waa qarsoodi. Ka qaybgalku waa ikhtiyaari. Jawaabaha waxaa la soo dirayaa kaliya marka aad dhammaystirto sahanka; kadib laguma xidhi karo adiga mana la tirtiri karo si gooni ah. Waxaa loo isticmaalaa kaliya mashruucan koorsada waxaana la hayaa ilaa {keep}. Qofka laga xiriiro: {contact}. Fadlan ha ku qorin magacyo ama xog xiriir jawaabaha furan. Sahankan waxaa loogu talagalay dadka da’doodu tahay 18 jir ama ka weyn.',agree:'Waan akhriyay ogeysiiska waanan oggolahay'},
+s1:['1 — gabi ahaanba ma raacsani','2 — in badan ma raacsani','3 — ma raacsani mana diido','4 — in badan waan raacsanahay','5 — gabi ahaanba waan raacsanahay','Ma aqaan'],
+s2:['1 — gabi ahaanba ma werwerinayo','2 — in badan ma werwerinayo','3 — wax yar ayay i werwerisaa','4 — aad bay i werwerisaa','5 — aad iyo aad bay i werwerisaa','Natiijadan ma filayo','Ma aqaan'],
+s3:['Aad ayuu u kordhay','In yar ayuu kordhay','Isma beddelin','In yar ayuu hoos u dhacay','Aad ayuu hoos ugu dhacay','Ma aqaan'],
+q:[{q:'Xaruntee ganacsi ayuu ganacsigaagu ku yaalaa?'},
+{q:'Maxaad u doortay goobtan ganacsigaaga?',o:['Kiro jaban','Socodka joogtada ah ee macaamiisha','U dhowaanshaha metro-ga ama gaadiid kale','Bulsho ganacsato kale ah','Macaamiil ka socda bulshadayda dhaqan','Kale']},
+{q:'Sidee ayay isu beddeleen kuwan soo socda sannadihii ugu dambeeyay?',r:['Kirada','Kharashyada adeegyada (koronto, biyo, kulayl)','Tirada macaamiisha']},
+{q:'Dhibaatooyin noocee ah ayaad la kulantay marka aad billawday ama aad wadatay ganacsigaaga?',h:'Waxaad dooran kartaa dhowr doorasho.',o:['Luqadda','Ogolaanshaha iyo waraaqaha','Helitaanka amaahda','Takoor','Saamaynta COVID-19','Midna','Kale']},
+{q:'Heshiis kiro noocee ah ayaad leedahay?',o:['Muddo go’an leh','Muddo aan go’neyn','Kiro-hoosaad laga qaaday kireyste kale','Ma aqaan']},
+{q:'Intee in leeg ayaad ku raacsan tahay odhaahda soo socota?',r:['Halkan waxaan la shaqeeyaa ganacsato kale.','Ganacsigaygu wuu dhibtoon doonaa haddii dukaamada iyo makhaayadaha agagaarka ah ay xidhmaan.','Shaqooyinka kale ee xarunta (metro, qolalka salaadda, goobaha lagu kulmo) waxay ila keenaan macaamiil.']},
+{q:'Intee in leeg ayaad ka war haysaa qorshayaasha dayactirka ama dumista xarunta ganacsigan?',o:['Si fiican ayaan u ogahay','Wax yar baan maqlay','Ma maqlin','Ma hubo']},
+{q:'Ma jiraa qof ka socda magaalada, mulkiilaha dhismaha ama mashruuc qorsheyn oo kula soo xiriiray mustaqbalka ganacsigaaga?',o:['Haa, luqad aan fahmo','Haa, laakiin ma ahayn luqad aan fahmo','Maya','Ma aqaan']},
+{q:'Intee in leeg ayay ku werwerinayaan kuwan soo socota?',r:['Kor u kaca kirada','In la i ku qasbo inaan guuro','Inaan meel kale ka waayo goob la mid ah','Luminta macaamiisha ama shaqaalaha','Inaanan awoodin kirada dhismaha cusub']},
+{q:'Intee in leeg ayay u badan tahay inaad ganacsigaaga ka sii wadi doonto aaggan kadib cusboonaysiinta?',o:['Aad ayay u badan tahay','Waa suurtagal','Uma badna','Aad ayay u yar tahay','Ma aqaan']},
+{q:'Tallaabooyin noocee ah ayaa gacan ka geysan kara in ganacsiyada madax-bannaan halkan lagu ilaaliyo?',h:'Waxaad dooran kartaa dhowr doorasho.',o:['Magdhow','Goobo ku meel gaar ah inta shaqada socoto','Heer kiro oo la dammaanad qaaday','Xaq lagu soo laabto kadib dayactirka','Dib-u-dhis marxalado ah halkii laga dumin lahaa gebi ahaan','Kale']},
+{q:'Maxaad jeclaan lahayd inaad ku tiraahdo qorsheeyayaasha magaalada iyo siyaasiyiinta, ama maxaa halkan lagu ilaalin lahaa?',h:'Fadlan ha ku qorin magacyo ama xog xiriir.'}]};
+T.ar={ui:{title:'استطلاع رأي لأصحاب المشاريع الصغيرة ومستأجري المحلات التجارية حول مستقبل مراكز التسوق المحلية',intro:'هذا الاستطلاع مجهول الهوية وطوعي. لا توجد إجابات صحيحة أو خاطئة: نحن مهتمون بتجربتك الشخصية. يمكنك تخطي أي سؤال والتوقف في أي وقت. تعني «التغييرات» التجديد أو إعادة التطوير أو الهدم المحتمل للمبنى وما حوله. ولا يعني ذلك أن أيًّا منها سيُنفَّذ.',start:'ابدأ',next:'التالي',back:'السابق',finish:'إنهاء',other:'يرجى التوضيح',max:'اختر {n} كحد أقصى',thanks:'شكرًا لمشاركتك! ستساعدنا إجاباتك على فهم احتياجات المشاريع المحلية بشكل أفضل.',copy:'نسخ الإجابات',opt:'سؤال اختياري',nt:'إشعار بشأن البيانات',n:'هذا الاستطلاع جزء من مشروع في مقرر جامعي. لا نطلب اسمك ولا بيانات الاتصال بك، لذا فإجاباتك مجهولة الهوية. المشاركة طوعية. لا تُرسل الإجابات إلا بعد إكمال الاستطلاع؛ وبعد ذلك لا يمكن ربطها بك ولا حذفها بشكل فردي. تُستخدم فقط في مشروع هذا المقرر وتُحفظ حتى {keep}. الشخص المسؤول للتواصل: {contact}. يُرجى عدم كتابة أسماء أو بيانات اتصال في الإجابات المفتوحة. الاستطلاع موجّه لمن تبلغ أعمارهم 18 عامًا فأكثر.',agree:'قرأتُ الإشعار وأوافق'},
+s1:['1 — لا أوافق إطلاقًا','2 — لا أوافق إلى حد ما','3 — لا أوافق ولا أعارض','4 — أوافق إلى حد ما','5 — أوافق تمامًا','لا أعرف'],
+s2:['1 — لا يقلقني إطلاقًا','2 — لا يقلقني كثيرًا','3 — يقلقني إلى حد ما','4 — يقلقني كثيرًا','5 — يقلقني بشدة','لا أتوقع هذه النتيجة','لا أعرف'],
+s3:['زاد كثيرًا','زاد قليلًا','لم يتغير','انخفض قليلًا','انخفض كثيرًا','لا أعرف'],
+q:[{q:'في أي مركز تسوق يقع مشروعك؟'},
+{q:'لماذا اخترت هذا المكان لمشروعك؟',o:['إيجار معقول','تدفق ثابت للزبائن','القرب من المترو أو وسائل النقل الأخرى','مجتمع من أصحاب المشاريع الآخرين','زبائن من مجتمعي الثقافي','أخرى']},
+{q:'كيف تغيّرت الأمور التالية في السنوات الأخيرة؟',r:['الإيجار','تكاليف الخدمات (كهرباء، ماء، تدفئة)','عدد الزبائن']},
+{q:'ما الصعوبات التي واجهتها في بدء مشروعك أو إدارته؟',h:'يمكنك اختيار عدة خيارات.',o:['اللغة','التصاريح والأوراق الرسمية','الحصول على قروض','التمييز','آثار جائحة كوفيد-19','لا شيء مما سبق','أخرى']},
+{q:'ما نوع عقد الإيجار لديك؟',o:['عقد محدد المدة','عقد غير محدد المدة','إيجار من الباطن من مستأجر آخر','لا أعرف']},
+{q:'إلى أي مدى توافق على العبارات التالية؟',r:['أتعاون هنا مع أصحاب مشاريع آخرين.','سيتضرر مشروعي إذا أُغلقت المتاجر والمقاهي المجاورة.','الوظائف الأخرى للمركز (المترو، المصليات، أماكن اللقاء) تجلب لي الزبائن.']},
+{q:'ما مدى معرفتك بخطط تجديد مركز التسوق هذا أو هدمه؟',o:['أعرفها جيدًا','سمعت عنها قليلًا','لم أسمع عنها','لست متأكدًا']},
+{q:'هل تواصل معك أحد من البلدية أو مالك المبنى أو مشروع التخطيط بشأن مستقبل مشروعك؟',o:['نعم، بلغة أفهمها','نعم، لكن ليس بلغة أفهمها','لا','لا أعرف']},
+{q:'ما مدى قلقك من الأمور التالية؟',r:['ارتفاع الإيجار','الاضطرار إلى الانتقال','عدم العثور على محل مماثل في مكان آخر','فقدان الزبائن أو الموظفين','عدم القدرة على تحمل إيجار المبنى المجدد']},
+{q:'ما احتمال أن تواصل عملك في هذه المنطقة بعد التجديد؟',o:['مرتفع جدًا','مرتفع','ضعيف','ضعيف جدًا','لا أعرف']},
+{q:'ما الإجراءات التي تساعد على بقاء المشاريع المستقلة هنا؟',h:'يمكنك اختيار عدة خيارات.',o:['تعويضات','محلات مؤقتة أثناء الأعمال','ضمان مستوى الإيجار','حق العودة بعد التجديد','إعادة بناء على مراحل بدل الهدم الكامل','أخرى']},
+{q:'ماذا تود أن تقول لمخططي المدينة والسياسيين، أو ما الذي ينبغي الحفاظ عليه هنا؟',h:'يُرجى عدم كتابة أسماء أو بيانات اتصال.'}]};
+T.tr={ui:{title:'Yerel alışveriş merkezlerinin geleceği hakkında küçük işletme sahipleri ve kiracılar için anket',intro:'Bu anket anonim ve gönüllüdür. Doğru ya da yanlış cevap yoktur: kendi deneyiminizle ilgileniyoruz. Herhangi bir soruyu atlayabilir ve istediğiniz zaman bırakabilirsiniz. “Değişiklikler”, binanın ve çevresinin olası yenilenmesi, yeniden geliştirilmesi veya yıkılması anlamına gelir. Bunların gerçekleştirileceği anlamına gelmez.',start:'Başla',next:'İleri',back:'Geri',finish:'Bitir',other:'Lütfen belirtin',max:'En fazla {n} seçin',thanks:'Katıldığınız için teşekkürler! Cevaplarınız yerel işletmelerin ihtiyaçlarını daha iyi anlamamıza yardımcı olacak.',copy:'Cevapları kopyala',opt:'isteğe bağlı soru',nt:'Veri bildirimi',n:'Bu anket bir üniversite ders projesinin parçasıdır. Adınızı veya iletişim bilgilerinizi sormuyoruz, bu nedenle cevaplarınız anonimdir. Katılım gönüllüdür. Cevaplar yalnızca anketi tamamladığınızda gönderilir; sonrasında sizinle ilişkilendirilemez ve tek tek silinemez. Yalnızca bu ders projesinde kullanılır ve {keep} tarihine kadar saklanır. İletişim kişisi: {contact}. Lütfen açık uçlu cevaplara ad veya iletişim bilgisi yazmayın. Anket 18 yaş ve üzeri kişiler içindir.',agree:'Bildirimi okudum ve kabul ediyorum'},
+s1:['1 — kesinlikle katılmıyorum','2 — biraz katılmıyorum','3 — ne katılıyorum ne katılmıyorum','4 — biraz katılıyorum','5 — kesinlikle katılıyorum','Bilmiyorum'],
+s2:['1 — hiç endişelenmiyorum','2 — pek endişelenmiyorum','3 — biraz endişeleniyorum','4 — çok endişeleniyorum','5 — son derece endişeleniyorum','Böyle bir sonuç beklemiyorum','Bilmiyorum'],
+s3:['Çok arttı','Biraz arttı','Değişmedi','Biraz azaldı','Çok azaldı','Bilmiyorum'],
+q:[{q:'İşletmeniz hangi alışveriş merkezinde?'},
+{q:'İşletmeniz için neden bu yeri seçtiniz?',o:['Uygun kira','Düzenli müşteri akışı','Metroya veya diğer ulaşıma yakınlık','Diğer girişimcilerle topluluk','Kendi kültürel çevremden müşteriler','Diğer']},
+{q:'Son yıllarda aşağıdakiler nasıl değişti?',r:['Kira','Fatura ve ortak giderler','Müşteri sayısı']},
+{q:'İşletmenizi açarken veya yürütürken hangi zorluklarla karşılaştınız?',h:'Birden fazla seçenek işaretleyebilirsiniz.',o:['Dil','İzinler ve evrak işleri','Kredi erişimi','Ayrımcılık','COVID-19’un etkileri','Hiçbiri','Diğer']},
+{q:'Ne tür bir kira sözleşmeniz var?',o:['Süreli','Süresiz','Başka bir kiracıdan alt kiralama','Bilmiyorum']},
+{q:'Aşağıdaki ifadelere ne kadar katılıyorsunuz?',r:['Burada diğer girişimcilerle iş birliği yapıyorum.','Yakındaki dükkânlar ve kafeler kapanırsa işletmem zarar görür.','Merkezin diğer işlevleri (metro, mescitler, buluşma yerleri) bana müşteri getiriyor.']},
+{q:'Bu alışveriş merkezinin yenilenmesi veya yıkılmasına ilişkin planları ne kadar biliyorsunuz?',o:['İyi biliyorum','Biraz duydum','Hiç duymadım','Emin değilim']},
+{q:'Şehirden, bina sahibinden veya bir planlama projesinden biri işletmenizin geleceği konusunda sizinle iletişime geçti mi?',o:['Evet, anladığım bir dilde','Evet, ama anladığım bir dilde değil','Hayır','Bilmiyorum']},
+{q:'Aşağıdakiler sizi ne kadar endişelendiriyor?',r:['Kiranın artması','Taşınmak zorunda kalmak','Başka yerde benzer bir mekân bulamamak','Müşteri veya çalışan kaybetmek','Yenilenen binanın kirasını karşılayamamak']},
+{q:'Yenilemeden sonra bu bölgede işletmenizi sürdürme olasılığınız nedir?',o:['Çok yüksek','Yüksek','Düşük','Çok düşük','Bilmiyorum']},
+{q:'Bağımsız işletmelerin burada kalmasına hangi önlemler yardımcı olur?',h:'Birden fazla seçenek işaretleyebilirsiniz.',o:['Tazminat','Çalışmalar sırasında geçici mekân','Güvence altına alınmış kira düzeyi','Yenilemeden sonra geri dönme hakkı','Tam yıkım yerine aşamalı yeniden inşa','Diğer']},
+{q:'Şehir planlamacılarına ve siyasetçilere ne söylemek istersiniz veya burada nelerin korunması gerekir?',h:'Lütfen ad veya iletişim bilgisi yazmayın.'}]};
+T.ru={ui:{title:'Опрос владельцев малого бизнеса и арендаторов коммерческих помещений о будущем местных торговых центров',intro:'Опрос анонимный и добровольный. Правильных или неправильных ответов нет: нам важен ваш собственный опыт. Любой вопрос можно пропустить, а участие — прекратить в любой момент. «Изменения» — это возможный ремонт, реконструкция или снос здания и прилегающей территории; это не значит, что что-либо из этого будет реализовано.',start:'Начать',next:'Далее',back:'Назад',finish:'Завершить',other:'Укажите',max:'Не более {n}',thanks:'Спасибо за участие! Ваши ответы помогут лучше понять потребности местных предприятий.',copy:'Скопировать ответы',opt:'необязательный вопрос',nt:'Уведомление о данных',n:'Этот опрос — часть учебного проекта университетского курса. Мы не спрашиваем ваше имя и контактные данные, поэтому ответы анонимны. Участие добровольное. Ответы отправляются только после завершения опроса; после этого их нельзя связать с вами или удалить по отдельности. Они используются только в рамках этого учебного проекта и хранятся до {keep}. Контактное лицо: {contact}. Пожалуйста, не указывайте имена и контактные данные в открытых ответах. Опрос предназначен для людей от 18 лет.',agree:'Я прочитал(а) уведомление и согласен(на)'},
+s1:['1 — совершенно не согласен(на)','2 — скорее не согласен(на)','3 — ни согласен(на), ни не согласен(на)','4 — скорее согласен(на)','5 — полностью согласен(на)','Затрудняюсь ответить'],
+s2:['1 — совсем не беспокоит','2 — скорее не беспокоит','3 — в некоторой степени беспокоит','4 — сильно беспокоит','5 — очень сильно беспокоит','Не ожидаю такого последствия','Затрудняюсь ответить'],
+s3:['Сильно выросли','Немного выросли','Не изменились','Немного снизились','Сильно снизились','Затрудняюсь ответить'],
+q:[{q:'В каком торговом центре находится ваш бизнес?'},
+{q:'Почему вы выбрали это место для своего бизнеса?',o:['Доступная аренда','Стабильный поток покупателей','Близость к метро или другому транспорту','Сообщество других предпринимателей','Клиенты из моей культурной среды','Другое']},
+{q:'Как за последние годы изменились следующие показатели?',r:['Арендная плата','Коммунальные расходы','Число клиентов']},
+{q:'С какими трудностями вы сталкивались при открытии и ведении бизнеса?',h:'Можно выбрать несколько вариантов.',o:['Язык','Разрешения и документы','Доступ к кредитам','Дискриминация','Последствия COVID-19','Ничего из перечисленного','Другое']},
+{q:'Какой у вас договор аренды?',o:['Срочный','Бессрочный','Субаренда у другого арендатора','Затрудняюсь ответить']},
+{q:'Насколько вы согласны со следующими утверждениями?',r:['Я сотрудничаю здесь с другими предпринимателями.','Мой бизнес пострадает, если соседние магазины и кафе закроются.','Другие функции центра (метро, молельные комнаты, места встреч) приводят ко мне клиентов.']},
+{q:'Насколько хорошо вы знаете о планах ремонта или сноса этого торгового центра?',o:['Хорошо знаю','Слышал(а) немного','Не слышал(а)','Не уверен(а)']},
+{q:'Связывался ли с вами кто-то из города, от собственника здания или проекта планирования по поводу будущего вашего бизнеса?',o:['Да, на понятном мне языке','Да, но не на понятном мне языке','Нет','Затрудняюсь ответить']},
+{q:'Насколько вас беспокоят следующие возможные последствия?',r:['Рост арендной платы','Необходимость переезда','Невозможность найти подобное помещение в другом месте','Потеря клиентов или сотрудников','Невозможность платить аренду в обновлённом здании']},
+{q:'Насколько вероятно, что вы продолжите свой бизнес в этом районе после обновления?',o:['Очень вероятно','Скорее вероятно','Скорее маловероятно','Совсем маловероятно','Затрудняюсь ответить']},
+{q:'Какие меры помогли бы сохранить здесь независимые предприятия?',h:'Можно выбрать несколько вариантов.',o:['Компенсации','Временные помещения на время работ','Гарантированный уровень аренды','Право вернуться после ремонта','Поэтапная реконструкция вместо полного сноса','Другое']},
+{q:'Что вы хотели бы сказать городским планировщикам и политикам или что здесь нужно сохранить?',h:'Пожалуйста, не указывайте имена и контактные данные.'}]};
+let lg=(navigator.language||'en').slice(0,2),i=-1,A={},ok=false;if(!T[lg])lg='en';
+const app=document.getElementById('app'),e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function S(k){A[i]=k;R()}
+function M(k){const q=Q[i],a=A[i]=A[i]||[],p=a.indexOf(k);if(p>-1)a.splice(p,1);else if(!q.max||a.length<q.max)a.push(k);R()}
+function G(j,v){(A[i]=A[i]||{})[j]=v===''?undefined:+v}
+function cp(){const s=JSON.stringify({lang:lg,answers:A});(navigator.clipboard?navigator.clipboard.writeText(s):Promise.reject()).catch(()=>prompt('',s))}
+function R(){const t=T[lg],u=t.ui;document.documentElement.lang=lg;document.documentElement.dir=lg=='ar'?'rtl':'ltr';
+let h='<div class="lg">'+Object.keys(L).map(k=>`<button class="${k==lg?'':'g'}" onclick="lg='${k}';R()">${L[k]}</button>`).join('')+'</div>';
+if(i<0)h+=`<h1>${e(u.title)}</h1><p>${e(u.intro)}</p><div class="nt"><h2>${e(u.nt)}</h2><p>${e(u.n.replace('{keep}',KEEP).replace('{contact}',CONTACT))}</p></div><label><input type="checkbox" ${ok?'checked':''} onchange="ok=this.checked;R()"><span>${e(u.agree)}</span></label><button ${ok?'':'disabled'} onclick="i=0;R()">${e(u.start)}</button>`;
+else if(i>=Q.length)h+=`<h1>${e(u.thanks)}</h1><button onclick="cp()">${e(u.copy)}</button>`;
+else{const q=Q[i],d=t.q[i],a=A[i];h+=`<div class="bar"><i style="width:${(i+1)/Q.length*100}%"></i></div><p class="mu">${i+1} / ${Q.length} · ${e(u.opt)}</p><h2>${e(d.q)}</h2>`;
+const hint=d.h||(q.max?u.max.replace('{n}',q.max):'');if(hint)h+=`<p class="mu">${e(hint)}</p>`;
+if(q.t=='s')(q.c?CE:d.o).forEach((o,k)=>h+=`<label><input type="radio" name="q" ${a===k?'checked':''} onchange="S(${k})"><span>${e(o)}</span></label>`);
+if(q.t=='m'){d.o.forEach((o,k)=>h+=`<label><input type="checkbox" ${a&&a.includes(k)?'checked':''} onchange="M(${k})"><span>${e(o)}</span></label>`);
+if(a&&a.includes(q.x))h+=`<input class="o" placeholder="${e(u.other)}" value="${e(A['o'+i]||'')}" oninput="A['o${i}']=this.value">`}
+if(q.t=='g')d.r.forEach((r,j)=>h+=`<div class="row"><span>${e(r)}</span><select onchange="G(${j},this.value)"><option value="">—</option>${t[q.s].map((s,k)=>`<option value="${k}" ${a&&a[j]===k?'selected':''}>${e(s)}</option>`).join('')}</select></div>`);
+if(q.t=='x')h+=`<textarea rows="5" oninput="A[${i}]=this.value">${e(a||'')}</textarea>`;
+h+=`<button class="g" onclick="i--;R()">${e(u.back)}</button><button onclick="i++;R()">${e(i==Q.length-1?u.finish:u.next)}</button>`}
+app.innerHTML=h;window.scrollTo(0,0)}
+R();
+</script></body></html>
