@@ -101,7 +101,7 @@ q:[{q:'В каком торговом центре находится ваш б�
 {q:'Насколько вероятно, что вы продолжите свой бизнес в этом районе после обновления?',o:['Очень вероятно','Скорее вероятно','Скорее маловероятно','Совсем маловероятно','Затрудняюсь ответить']},
 {q:'Какие меры помогли бы сохранить здесь независимые предприятия?',h:'Можно выбрать несколько вариантов.',o:['Компенсации','Временные помещения на время работ','Гарантированный уровень аренды','Право вернуться после ремонта','Поэтапная реконструкция вместо полного сноса','Другое']},
 {q:'Что вы хотели бы сказать городским планировщикам и политикам или что здесь нужно сохранить?',h:'Пожалуйста, не указывайте имена и контактные данные.'}]};
-let lg=(navigator.language||'en').slice(0,2),i=-1,A={},ok=false;if(!T[lg])lg='en';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxPi2AGykBCJ8aYfV_hLs6-_1Z_XnkB3wrET8XBHw0QXGO_fqTbyOO5ncskE2Ov9mNAZA/exec';let sent=false;let lg=(navigator.language||'en').slice(0,2),i=-1,A={},ok=false;if(!T[lg])lg='en';
 const app=document.getElementById('app'),e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function S(k){A[i]=k;R()}
 function M(k){const q=Q[i],a=A[i]=A[i]||[],p=a.indexOf(k);if(p>-1)a.splice(p,1);else if(!q.max||a.length<q.max)a.push(k);R()}
@@ -110,7 +110,7 @@ function cp(){const s=JSON.stringify({lang:lg,answers:A});(navigator.clipboard?n
 function R(){const t=T[lg],u=t.ui;document.documentElement.lang=lg;document.documentElement.dir=lg=='ar'?'rtl':'ltr';
 let h='<div class="lg">'+Object.keys(L).map(k=>`<button class="${k==lg?'':'g'}" onclick="lg='${k}';R()">${L[k]}</button>`).join('')+'</div>';
 if(i<0)h+=`<h1>${e(u.title)}</h1><p>${e(u.intro)}</p><div class="nt"><h2>${e(u.nt)}</h2><p>${e(u.n.replace('{keep}',KEEP).replace('{contact}',CONTACT))}</p></div><label><input type="checkbox" ${ok?'checked':''} onchange="ok=this.checked;R()"><span>${e(u.agree)}</span></label><button ${ok?'':'disabled'} onclick="i=0;R()">${e(u.start)}</button>`;
-else if(i>=Q.length)h+=`<h1>${e(u.thanks)}</h1><button onclick="cp()">${e(u.copy)}</button>`;
+else if(i>=Q.length){if(!sent){sent=true;try{fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',body:JSON.stringify({lang:lg,answers:A})})}catch(x){}}h+=`<h1>${e(u.thanks)}</h1>`}
 else{const q=Q[i],d=t.q[i],a=A[i];h+=`<div class="bar"><i style="width:${(i+1)/Q.length*100}%"></i></div><p class="mu">${i+1} / ${Q.length} · ${e(u.opt)}</p><h2>${e(d.q)}</h2>`;
 const hint=d.h||(q.max?u.max.replace('{n}',q.max):'');if(hint)h+=`<p class="mu">${e(hint)}</p>`;
 if(q.t=='s')(q.c?CE:d.o).forEach((o,k)=>h+=`<label><input type="radio" name="q" ${a===k?'checked':''} onchange="S(${k})"><span>${e(o)}</span></label>`);
