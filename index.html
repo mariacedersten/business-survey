@@ -101,7 +101,7 @@ q:[{q:'В каком торговом центре находится ваш б�
 {q:'Насколько вероятно, что вы продолжите свой бизнес в этом районе после обновления?',o:['Очень вероятно','Скорее вероятно','Скорее маловероятно','Совсем маловероятно','Затрудняюсь ответить']},
 {q:'Какие меры помогли бы сохранить здесь независимые предприятия?',h:'Можно выбрать несколько вариантов.',o:['Компенсации','Временные помещения на время работ','Гарантированный уровень аренды','Право вернуться после ремонта','Поэтапная реконструкция вместо полного сноса','Другое']},
 {q:'Что вы хотели бы сказать городским планировщикам и политикам или что здесь нужно сохранить?',h:'Пожалуйста, не указывайте имена и контактные данные.'}]};
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxPi2AGykBCJ8aYfV_hLs6-_1Z_XnkB3wrET8XBHw0QXGO_fqTbyOO5ncskE2Ov9mNAZA/exec';let sent=false;let lg=(navigator.language||'en').slice(0,2),i=-1,A={},ok=false;if(!T[lg])lg='en';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyKmcfIMTyx49k6cImf6tUDGdq1Tj7WgHYJxF-ZuOkGbj2fRJxdcFtMhE7_KSnuQqB3dA/exec';let sent=false;let lg=(navigator.language||'en').slice(0,2),i=-1,A={},ok=false;if(!T[lg])lg='en';
 const app=document.getElementById('app'),e=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function S(k){A[i]=k;R()}
 function M(k){const q=Q[i],a=A[i]=A[i]||[],p=a.indexOf(k);if(p>-1)a.splice(p,1);else if(!q.max||a.length<q.max)a.push(k);R()}
